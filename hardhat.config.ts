@@ -4,11 +4,20 @@ import "@nomiclabs/hardhat-waffle";
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task('accounts', "Prints the list of accounts", async (args, hre) => {
-  const accounts = await hre.ethers.getSigners();
+	const accounts = await hre.ethers.getSigners();
 
-  for (const account of accounts) {
-    console.log(account.address);
-  }
+	for (const account of accounts) {
+		let message = "hello world"
+		let signature = await account.signMessage(message)
+		const actualAddress = hre.ethers.utils.verifyMessage(message, signature)
+		const msgHash = hre.ethers.utils.hashMessage(message);
+		const msgHashBytes = hre.ethers.utils.arrayify(msgHash);
+
+		// Now you have the digest,
+		const recoveredPubKey = hre.ethers.utils.recoverPublicKey(msgHashBytes, signature);
+		console.log(actualAddress === account.address);
+
+	}
 });
 
 // You need to export an object to set up your config
