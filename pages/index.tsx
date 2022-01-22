@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import {ethers} from 'ethers';
+import handler from './api/hello';
 import {encrypt, encryptSafely} from '@metamask/eth-sig-util';
 const ethUtil = require('ethereumjs-util');
 import Head from 'next/head';
@@ -113,13 +114,6 @@ const Home: NextPage = () => {
 			</footer>
 		</div>
   	)
-}
-
-interface ecryptedMessage {
-	ciphertext: string,
-	ephemPublicKey: string
-	nonce: string
-	version:string
 }
 
 export default Home;
