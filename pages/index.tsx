@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import {ethers} from 'ethers';
-import handler from './api/hello';
+// import handler from './api/hello';
 import {encrypt, encryptSafely} from '@metamask/eth-sig-util';
 const ethUtil = require('ethereumjs-util');
 import Head from 'next/head';
@@ -10,6 +10,7 @@ import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
 
+	/** 
 	let [provider, setProvider] = useState()
 
 	useEffect(() => {
@@ -49,7 +50,7 @@ const Home: NextPage = () => {
 		console.log("Enc Message: ", encryptedMessage)
 		return await provider.send('eth_decrypt', [encryptedMessage, account])
 	}
-
+*/
 
   	return (
 		<div className={styles.container}>
