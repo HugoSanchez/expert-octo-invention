@@ -1,0 +1,9 @@
+Types of collections: 
+
+    · Open (anyone can publish) ?
+    · Members managed public 
+    · Members managed private (with secret)
+    · Bonded: only holders of token X from bonding curve 
+    · Token-gated: only token holders, whatever ERC20 
+    · NFT collection 
+    

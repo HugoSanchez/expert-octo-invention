@@ -6,14 +6,19 @@ type Data = {
     balance: string | any,
     transaction: string | any,
     txID: string
-}
 
+}
+/** 
 export default async function handler(
+
     req: NextApiRequest,
     res: NextApiResponse<Data>
+
 ) {
-    const bundlr = new Bundlr("https://node1.bundlr.network/", "matic", process.env.BUNDLER);
-    
+
+    // const BUNDLER_NODE_URL = "X"
+	const {BUNDLER_NODE_URL, BUNDLER_CURRENCY, BUNDLER} = process.env
+    const bundlr = new Bundlr(BUNDLER_NODE_URL, BUNDLER_CURRENCY, BUNDLER);
     const data = JSON.stringify({isThisWorking: "yes"})
     const tags = [{name: "Content-Type", value: "application/json"}];
 
@@ -22,14 +27,13 @@ export default async function handler(
     await transaction.sign();
     await transaction.upload();
 
-    console.log(1)
     let balance = await bundlr.getLoadedBalance()
-    console.log(2)
 
     res.status(200).json({ 
-      balance: balance,
-      transaction: transaction,
-      txID: transaction.id
-     })
+		balance: balance,
+		transaction: transaction,
+		txID: transaction.id
+    })
 }
 
+*/

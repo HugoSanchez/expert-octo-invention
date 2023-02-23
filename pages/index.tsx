@@ -60,7 +60,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<main className={styles.main}>
-				<h1 className={styles.title}>
+				<h1 className="text-indigo-500 text-7xl select-text font-bold underline">
 				Welcome to <a href="https://nextjs.org">Noxt.js!</a>
 				</h1>
 

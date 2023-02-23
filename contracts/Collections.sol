@@ -27,9 +27,9 @@ contract Collections is ERC721Meta {
         _members[msg.sender] = true;
     }
 
-    //
+    ////////////////////////////
     // MODIFIERS section.
-    //
+    ////////////////////////////
 
     // Owner
     modifier OnlyOwner() {
@@ -49,9 +49,9 @@ contract Collections is ERC721Meta {
         _;
     }
 
-    //
+    ////////////////////////////
     // MODERATORS section.
-    //
+    ////////////////////////////
 
     function getOwner() public view returns (address) {
         return _owner;
@@ -95,9 +95,9 @@ contract Collections is ERC721Meta {
         return true;
     }
 
-    //
+    ////////////////////////////
     // MEMBERS section.
-    //
+    ////////////////////////////
 
     // Get members.
     function getMember(address _member) public view returns (bool) {
@@ -129,11 +129,11 @@ contract Collections is ERC721Meta {
         return true;
     }
 
-    //
+    ////////////////////////////
     // Memories items section
-    //
+    ////////////////////////////
 
-    // Create token: only members can mint a new memory.
+    // mintMemory: only members can mint a new memory.
     function mintMemory(
         string memory name,
         string memory description,
