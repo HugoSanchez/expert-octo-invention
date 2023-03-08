@@ -3,17 +3,20 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./Collections.sol";
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 // import "./StringToLower.sol";
 
-contract Registry {
-    uint256 counter = 0;
+contract ProfileRegistry is ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
-    // Mapping profile ID to wallet address
+    // Mapping address to profile ID
     mapping(address => uint256) addressToProfileID;
     // Mapping handle to profile ID.
     mapping(bytes32 => uint256) handleOwnershipById;
-    // Mapping address to ID to profile details
+    // Mapping ID to profile details.
     mapping(uint256 => Profile) idToProfileDetails;
 
     struct Profile {
@@ -22,8 +25,12 @@ contract Registry {
         address[] collections;
     }
 
-    function getCounter() public view returns (uint256) {
-        return counter;
+    constructor() payable ERC721("Clarise Name Registry", "CLA") {
+        // console.log("IT's WORKING");
+    }
+
+    function getCount() public view returns (uint256) {
+        return _tokenIds.current();
     }
 
     function getProfileByID(uint256 _id) public view returns (Profile memory) {
@@ -45,11 +52,14 @@ contract Registry {
         );
         require(handleOwnershipById[handleHash] == 0, "Handle already taken");
 
-        counter++;
-        addressToProfileID[msg.sender] = counter;
-        handleOwnershipById[handleHash] = counter;
-        idToProfileDetails[counter].handle = _handle;
-        idToProfileDetails[counter].metadataURI = _metadataURI;
+        _tokenIds.increment();
+        uint256 newRecordId = _tokenIds.current();
+        addressToProfileID[msg.sender] = newRecordId;
+        handleOwnershipById[handleHash] = newRecordId;
+        idToProfileDetails[newRecordId].handle = _handle;
+        idToProfileDetails[newRecordId].metadataURI = _metadataURI;
+        _safeMint(msg.sender, newRecordId);
+        _setTokenURI(newRecordId, _metadataURI);
     }
 
     function updateProfileMetadata(
@@ -58,7 +68,7 @@ contract Registry {
     ) public {
         require(
             addressToProfileID[msg.sender] == _profileId,
-            "Can't change someone else's collections"
+            "Can't change someone else's metadata"
         );
         idToProfileDetails[_profileId].metadataURI = _metadataURI;
     }
