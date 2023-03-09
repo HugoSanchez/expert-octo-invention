@@ -20,10 +20,10 @@ describe.only("Profile Registry", function () {
 
 	describe("Deployment", function() {
 		// It should set the deployer as contract owner 
-		it("Should get the tokenID count", async function () {
+		it("Should deploy contract and set initial count to 1", async function () {
 			
 			const currentCount: string = await registry.getCount();
-			expect(currentCount).to.equal(0);
+			expect(currentCount).to.equal(1);
 		});
 	})
 
@@ -35,11 +35,29 @@ describe.only("Profile Registry", function () {
 			const profle: string = await registry.registerProfile(handle, metadataURI);
         });
 
-		it("Should update current count when registering a new profile", async function () {
-
-			const currentCount: number = await registry.getCount();
-			expect(currentCount).to.equal(1);
+        it("Should mint a new profile", async function () {
+			
+			const currentCount: string = await registry.getCount();
+			expect(currentCount).to.equal(2);
 		});
+
+        it("Should NOT allow mint the same profile twice", async function () {
+			
+			const handle = "mozambique"
+            const metadataURI = "https://arweave.net/cc7848jjh277xn"
+			await expect(registry.registerProfile(handle, metadataURI))
+                .to.be.revertedWith("This address already has a profile.");
+		});
+
+        it("Should NOT allow mint a profile which handle is already taken", async function () {
+			
+			const handle = "mozambique"
+            const metadataURI = "https://arweave.net/cc7848jjh277xn"
+            const [owner, addr1] = await ethers.getSigners();
+			await expect(registry.connect(addr1).registerProfile(handle, metadataURI))
+                .to.be.revertedWith("Handle already taken");
+		});
+
 
         it("Should return profile ID by address", async function () {
 			
@@ -71,20 +89,39 @@ describe.only("Profile Registry", function () {
             
 		});
 
-        /**
-		// It should set the deployer as moderator
-		it("Should set the deployer as moderator", async function () {
+        it("Should allow owner to ADD a new collection", async function () {
 			
-			const isModerator: boolean = await registry.getModerator(owner.address);
-			expect(isModerator).to.be.true;
+            const collectionAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+			await registry.addCollection(1, collectionAddress);
+            const profileDetails: any = await registry.getProfileByID(1);
+			expect(profileDetails.collections[0]).to.equal(collectionAddress);
 		});
 
-		// It should set the deployer as member
-		it("Should set the deployer as member", async function () {
+        it("Should NOT allow to UPDATE someone else's metadata", async function () {
 			
-			const isMember: boolean = await registry.getMember(owner.address);
-			expect(isMember).to.be.true;
+            const collectionAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+            const [owner, addr1] = await ethers.getSigners();
+			await expect(registry.connect(addr1).addCollection(1, collectionAddress))
+                .to.be.revertedWith("Can't change someone else's collections");
+            
 		});
-         */
+
+        it("Should allow owner to REMOVE a collection", async function () {
+			
+            const collectionAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+			await registry.addCollection(1, collectionAddress);
+			await registry.removeCollection(1, 0);
+            const profileDetails: any = await registry.getProfileByID(1);
+			expect(profileDetails.collections[0]).to.equal(undefined);
+		});
+
+        it("Should NOT allow someone else to REMOVE a collection", async function () {
+			
+            const collectionAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+			await registry.addCollection(1, collectionAddress);
+            const [owner, addr1] = await ethers.getSigners();
+			await expect(registry.connect(addr1).removeCollection(1, 0))
+                .to.be.revertedWith("Can't remove someone else's collections");
+		});
 	})
 });

@@ -26,7 +26,7 @@ contract ProfileRegistry is ERC721URIStorage {
     }
 
     constructor() payable ERC721("Clarise Name Registry", "CLA") {
-        // console.log("IT's WORKING");
+        _tokenIds.increment();
     }
 
     function getCount() public view returns (uint256) {
@@ -52,7 +52,6 @@ contract ProfileRegistry is ERC721URIStorage {
         );
         require(handleOwnershipById[handleHash] == 0, "Handle already taken");
 
-        _tokenIds.increment();
         uint256 newRecordId = _tokenIds.current();
         addressToProfileID[msg.sender] = newRecordId;
         handleOwnershipById[handleHash] = newRecordId;
@@ -60,6 +59,7 @@ contract ProfileRegistry is ERC721URIStorage {
         idToProfileDetails[newRecordId].metadataURI = _metadataURI;
         _safeMint(msg.sender, newRecordId);
         _setTokenURI(newRecordId, _metadataURI);
+        _tokenIds.increment();
     }
 
     function updateProfileMetadata(
@@ -88,6 +88,10 @@ contract ProfileRegistry is ERC721URIStorage {
     function removeCollection(uint256 _profileId, uint256 _index) public {
         address[] storage array = idToProfileDetails[_profileId].collections;
         require(_index < array.length, "index out of bound");
+        require(
+            addressToProfileID[msg.sender] == _profileId,
+            "Can't remove someone else's collections"
+        );
 
         for (uint256 i = _index; i < array.length - 1; i++) {
             array[i] = array[i + 1];
