@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 
-describe.only("Profile Registry", function () {
+describe("Profile Registry", function () {
 
 	let ProfileRegistry: any;
 	let registry: any;
@@ -41,7 +41,7 @@ describe.only("Profile Registry", function () {
 			expect(currentCount).to.equal(2);
 		});
 
-        it("Should NOT allow mint the same profile twice", async function () {
+        it("Should NOT allow to mint the same profile twice", async function () {
 			
 			const handle = "mozambique"
             const metadataURI = "https://arweave.net/cc7848jjh277xn"
@@ -49,7 +49,7 @@ describe.only("Profile Registry", function () {
                 .to.be.revertedWith("This address already has a profile.");
 		});
 
-        it("Should NOT allow mint a profile which handle is already taken", async function () {
+        it("Should NOT allow to mint a profile which handle is already taken", async function () {
 			
 			const handle = "mozambique"
             const metadataURI = "https://arweave.net/cc7848jjh277xn"
@@ -97,7 +97,7 @@ describe.only("Profile Registry", function () {
 			expect(profileDetails.collections[0]).to.equal(collectionAddress);
 		});
 
-        it("Should NOT allow to UPDATE someone else's metadata", async function () {
+        it("Should NOT allow to UPDATE someone else's collections", async function () {
 			
             const collectionAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
             const [owner, addr1] = await ethers.getSigners();

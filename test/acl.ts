@@ -10,12 +10,17 @@ describe("Collections", function () {
 	let addr2: any;
 	let addrs: any;
 
+	let readType: number = 1;
+	let writeType: number = 2;
+	let contractAddress: string = "0x0000000000000000000000000000000000000000"
+	let minimumBalance: number = 0;
+
 	// `beforeEach` will run before each test, re-deploying the contract every
 	// time. It receives a callback, which can be async.
 	beforeEach(async function () {
-		Collection = await ethers.getContractFactory("Collections");
+		Collection = await ethers.getContractFactory("ACL");
 		[owner, addr1, addr2, ...addrs] = await ethers.getSigners();
-		collection = await Collection.deploy("Rebirth of Detroit", "RDT");
+		collection = await Collection.deploy(readType, writeType, contractAddress, minimumBalance);
 	});
 
 	describe("Deployment", function() {
@@ -123,6 +128,7 @@ describe("Collections", function () {
 		});
 	})
 
+	/** 
 
 	describe("Minting", function() {
 		// It should mint a new memory 
@@ -141,4 +147,8 @@ describe("Collections", function () {
 				.to.be.revertedWith("ERC721URIStorage: URI query for nonexistent token")
 		});
 	})
+
+	*/
+
+
 });

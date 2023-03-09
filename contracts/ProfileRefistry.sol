@@ -12,6 +12,9 @@ contract ProfileRegistry is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
+    // ACL contract address
+    address _ACL;
+
     // Mapping address to profile ID
     mapping(address => uint256) addressToProfileID;
     // Mapping handle to profile ID.
